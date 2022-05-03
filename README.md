@@ -15,3 +15,7 @@ to specify it if they want
 garden write
 garden write -t "Some Title"
 ```
+
+## Credits
+
+***[Building a Digital Garden CLI with StructOpt](https://rustadventure.dev/building-a-digital-garden-cli-with-structopt) by [Chris Biscardi](https://twitter.com/chrisbiscardi)***

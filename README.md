@@ -4,6 +4,14 @@ A CLI tool for the creation and maintenance of Digital Gardens
 
 ## Commands
 
+### Setting the garden path
+
+```shell
+GARDEN_PATH=~/some/path garden write
+garden -p ~/some/path write
+garden --garden_path ~/some/path write
+```
+
 ### write
 
 Open a new file to write in our digital garden. Since we

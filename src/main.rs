@@ -1,4 +1,8 @@
-use color_eyre::eyre::Result;
+use std::path::PathBuf;
+
+use color_eyre::eyre::{eyre, Result};
+use digital_garden::write;
+use directories::UserDirs;
 use structopt::StructOpt;
 
 /// A CLI for the growing and curation of a digital garden
@@ -25,9 +29,17 @@ enum Command {
     },
 }
 
+fn get_default_garden_dir() -> Result<PathBuf> {
+    let users_dirs = UserDirs::new().ok_or_else(|| eyre!("Could not find home directory"))?;
+
+    Ok(users_dirs.home_dir().join(".garden"))
+}
+
 fn main() -> Result<()> {
     color_eyre::install()?;
     let opt = Opt::from_args();
-    dbg!(opt);
-    todo!();
+    dbg!(&opt);
+    match opt.cmd {
+        Command::Write { title } => write(title),
+    }
 }

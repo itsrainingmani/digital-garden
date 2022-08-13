@@ -18,6 +18,7 @@ path = "src/lib.rs"
 color-eyre = "0.6.1"
 directories = "4.0.1"
 structopt = "0.3.26"
+edit = "0.1.4"
 
 [dev-dependencies]
 assert_cmd = "2.0.4"

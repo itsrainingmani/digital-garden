@@ -1,7 +1,10 @@
 use color_eyre::{eyre::Context, Result};
 use edit::{edit_file, Builder};
-use std::io::{Read, Seek, SeekFrom, Write};
 use std::path::PathBuf;
+use std::{
+    fs,
+    io::{Read, Seek, SeekFrom, Write},
+};
 
 const TEMPLATE: &[u8; 2] = b"# ";
 
@@ -19,7 +22,7 @@ pub fn write(garden_path: PathBuf, title: Option<String>) -> Result<()> {
     // let the user write whatever they want in their fave editor
     // before returing to the cli and finishing up
 
-    edit_file(filepath)?;
+    edit_file(&filepath)?;
 
     // read the user's changes back from the file into a string
     let mut contents = String::new();
@@ -44,10 +47,31 @@ pub fn write(garden_path: PathBuf, title: Option<String>) -> Result<()> {
     let filename = match document_title {
         Some(raw_title) => confirm_filename(&raw_title),
         None => ask_for_filename(),
-    };
+    }?;
 
-    dbg!(contents, filename);
-    todo!()
+    let mut i: usize = 0;
+    loop {
+        let dest_filename = format!(
+            "{}{}",
+            filename,
+            if i == 0 {
+                "".to_string()
+            } else {
+                i.to_string()
+            }
+        );
+
+        let mut dest = garden_path.join(dest_filename);
+        dest.set_extension("md");
+        if dest.exists() {
+            i = i + 1;
+        } else {
+            fs::rename(filepath, &dest)?;
+            break;
+        }
+    }
+
+    Ok(())
 }
 
 fn confirm_filename(raw_title: &str) -> Result<String> {

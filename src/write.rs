@@ -1,8 +1,4 @@
-use color_eyre::{
-    eyre::{Context, ContextCompat},
-    owo_colors::OwoColorize,
-    Result,
-};
+use color_eyre::{eyre::Context, owo_colors::OwoColorize, Result};
 use edit::{edit_file, Builder};
 use std::path::PathBuf;
 use std::{

@@ -1,4 +1,8 @@
-use color_eyre::{eyre::Context, Result};
+use color_eyre::{
+    eyre::{Context, ContextCompat},
+    owo_colors::OwoColorize,
+    Result,
+};
 use edit::{edit_file, Builder};
 use std::path::PathBuf;
 use std::{
@@ -67,6 +71,7 @@ pub fn write(garden_path: PathBuf, title: Option<String>) -> Result<()> {
             i = i + 1;
         } else {
             fs::rename(filepath, &dest)?;
+            println!("Saved file to - {}", dest.display().green().italic());
             break;
         }
     }
@@ -81,9 +86,11 @@ fn confirm_filename(raw_title: &str) -> Result<String> {
         // the code
         let result = rprompt::prompt_reply_stderr(&format!(
             "\
-current title: `{} | slugified: {}`
+{} {} | {} {}
 Do you want a different title? (y/N): ",
+            "current title: ".green().bold(),
             raw_title,
+            "slugified title: ".yellow().bold(),
             slug::slugify(&raw_title)
         ))
         .wrap_err("Failed to get input for y/n question")?;
@@ -103,11 +110,14 @@ Do you want a different title? (y/N): ",
 }
 
 fn ask_for_filename() -> Result<String> {
-    rprompt::prompt_reply_stderr(
+    rprompt::prompt_reply_stderr(&format!(
+        "{}",
         "\
-Enter filename
-> ",
-    )
+    Enter filename
+    > "
+        .blue()
+        .bold(),
+    ))
     .wrap_err("Failed to get filename")
     .map(|title| slug::slugify(title))
 }
